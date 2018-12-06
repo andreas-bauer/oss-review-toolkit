@@ -47,7 +47,7 @@ fun ByteArray.toHexString(): String = joinToString("") { String.format("%02x", i
 /**
  * Return the hexadecimal digest of the given hash [algorithm] for this [File].
  */
-fun File.hash(algorithm: String = "SHA-1"): String = DigestUtils(algorithm).digestAsHex(this)
+fun File.hash(algorithm: String = "SHA-1") = Hash(DigestUtils(algorithm).digestAsHex(this), algorithm)
 
 /**
  * Resolve the file to the real underlying file. In contrast to Java's [File.getCanonicalFile], this also works to

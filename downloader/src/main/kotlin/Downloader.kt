@@ -22,14 +22,13 @@ package com.here.ort.downloader
 import ch.frankel.slf4k.*
 
 import com.here.ort.downloader.vcs.GitRepo
-import com.here.ort.model.HashAlgorithm
+import com.here.ort.model.Hash
 import com.here.ort.model.Package
 import com.here.ort.model.Project
 import com.here.ort.model.RemoteArtifact
 import com.here.ort.model.VcsInfo
 import com.here.ort.utils.OkHttpClientHelper
 import com.here.ort.utils.collectMessages
-import com.here.ort.utils.hash
 import com.here.ort.utils.log
 import com.here.ort.utils.safeDeleteRecursively
 import com.here.ort.utils.safeMkdirs
@@ -290,7 +289,9 @@ class Downloader {
             }
         }
 
-        verifyChecksum(sourceArchive, target.sourceArtifact.hash, target.sourceArtifact.hashAlgorithm)
+        if (!Hash(target.sourceArtifact.hashAlgorithm, target.sourceArtifact.hash).verify(sourceArchive)) {
+            throw DownloadException("Calculated ${target.sourceArtifact.hashAlgorithm} hash '$digest' differs from expected hash '$hash'.")
+        }
 
         try {
             if (sourceArchive.extension == "gem") {
@@ -319,19 +320,5 @@ class Downloader {
         }
 
         return DownloadResult(startTime, outputDirectory, sourceArtifact = target.sourceArtifact)
-    }
-
-    private fun verifyChecksum(file: File, hash: String, hashAlgorithm: HashAlgorithm) {
-        val digest = when (hashAlgorithm) {
-            HashAlgorithm.UNKNOWN -> {
-                log.warn { "Unknown hash algorithm." }
-                ""
-            }
-            else -> file.hash(hashAlgorithm.toString())
-        }
-
-        if (digest != hash) {
-            throw DownloadException("Calculated $hashAlgorithm hash '$digest' differs from expected hash '$hash'.")
-        }
     }
 }

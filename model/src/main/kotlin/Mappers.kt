@@ -26,6 +26,7 @@ import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.databind.module.SimpleModule
 import com.fasterxml.jackson.dataformat.xml.XmlFactory
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory
+import com.fasterxml.jackson.dataformat.yaml.YAMLGenerator
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 
@@ -53,6 +54,12 @@ private val mapperConfig: ObjectMapper.() -> Unit = {
     registerModule(ortModelModule)
 
     propertyNamingStrategy = PropertyNamingStrategy.SNAKE_CASE
+}
+
+fun createYamlMapper(): ObjectMapper {
+    val factory = YAMLFactory()
+    factory.configure(YAMLGenerator.Feature.SPLIT_LINES, false)
+    return ObjectMapper(factory).apply(mapperConfig)
 }
 
 val jsonMapper = ObjectMapper().apply(mapperConfig)

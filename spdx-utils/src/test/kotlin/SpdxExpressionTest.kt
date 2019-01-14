@@ -110,6 +110,39 @@ class SpdxExpressionTest : WordSpec() {
                     SpdxExpression.parse("wxWindows") shouldBe SpdxLicenseIdExpression("wxWindows")
                 }
             }
+
+            "work for deprecated license variants" {
+                assertSoftly {
+                    SpdxExpression.parse("AGPL-1.0") shouldBe SpdxLicenseIdExpression("AGPL-1.0")
+                    SpdxExpression.parse("AGPL-3.0") shouldBe SpdxLicenseIdExpression("AGPL-3.0")
+                    SpdxExpression.parse("eCos-2.0") shouldBe SpdxLicenseIdExpression("eCos-2.0")
+                    SpdxExpression.parse("GFDL-1.1") shouldBe SpdxLicenseIdExpression("GFDL-1.1")
+                    SpdxExpression.parse("GFDL-1.2") shouldBe SpdxLicenseIdExpression("GFDL-1.2")
+                    SpdxExpression.parse("GFDL-1.3") shouldBe SpdxLicenseIdExpression("GFDL-1.3")
+                    SpdxExpression.parse("GPL-1.0+") shouldBe SpdxLicenseIdExpression("GPL-1.0-or-later")
+                    SpdxExpression.parse("GPL-1.0") shouldBe SpdxLicenseIdExpression("GPL-1.0-only")
+                    SpdxExpression.parse("GPL-2.0+") shouldBe SpdxLicenseIdExpression("GPL-2.0-or-later")
+                    SpdxExpression.parse("GPL-2.0") shouldBe SpdxLicenseIdExpression("GPL-2.0-only")
+                    SpdxExpression.parse("GPL-3.0+") shouldBe SpdxLicenseIdExpression("GPL-3.0-or-later")
+                    SpdxExpression.parse("GPL-3.0") shouldBe SpdxLicenseIdExpression("GPL-3.0-only")
+                    SpdxExpression.parse("LGPL-2.0+") shouldBe SpdxLicenseIdExpression("LGPL-2.0-or-later")
+                    SpdxExpression.parse("LGPL-2.0") shouldBe SpdxLicenseIdExpression("LGPL-2.0-only")
+                    SpdxExpression.parse("LGPL-2.1+") shouldBe SpdxLicenseIdExpression("LGPL-2.1-or-later")
+                    SpdxExpression.parse("LGPL-2.1") shouldBe SpdxLicenseIdExpression("LGPL-2.1-only")
+                    SpdxExpression.parse("LGPL-3.0+") shouldBe SpdxLicenseIdExpression("LGPL-3.0-or-later")
+                    SpdxExpression.parse("LGPL-3.0") shouldBe SpdxLicenseIdExpression("LGPL-3.0-only")
+                }
+            }
+
+            "work for deprecated license exceptions" {
+                SpdxExpression.parse("GPL-2.0-with-autoconf-exception") shouldBe SpdxLicenseExceptionExpression("GPL-2.0 WITH autoconf-exception")
+                SpdxExpression.parse("GPL-2.0-with-bison-exception") shouldBe SpdxLicenseExceptionExpression("GPL-2.0 WITH bison-exception")
+                SpdxExpression.parse("GPL-2.0-with-classpath-exception") shouldBe SpdxLicenseExceptionExpression("GPL-2.0 WITH classpath-exception")
+                SpdxExpression.parse("GPL-2.0-with-font-exception") shouldBe SpdxLicenseExceptionExpression("GPL-2.0 WITH font-exception")
+                SpdxExpression.parse("GPL-2.0-with-GCC-exception") shouldBe SpdxLicenseExceptionExpression("GPL-2.0 WITH GCC-exception")
+                SpdxExpression.parse("GPL-3.0-with-autoconf-exception") shouldBe SpdxLicenseExceptionExpression("GPL-3.0 WITH autoconf-exception")
+                SpdxExpression.parse("GPL-3.0-with-GCC-exception") shouldBe SpdxLicenseExceptionExpression("GPL-3.0 WITH GCC-exception")
+            }
         }
     }
 }
